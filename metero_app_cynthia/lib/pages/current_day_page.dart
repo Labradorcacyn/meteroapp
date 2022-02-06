@@ -53,7 +53,7 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
+                  padding: EdgeInsets.only(top: 20.0),
                   child: Text(
                     'TIEMPO EN ${city.toUpperCase()}',
                     style: TextStyle(

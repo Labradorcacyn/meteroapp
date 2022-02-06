@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:metero_app_cynthia/pages/city_days_page.dart';
 import 'package:metero_app_cynthia/pages/current_day_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,7 +16,7 @@ class _HomePageState extends State<HomePage> {
 
   final screens = [
     CurrentDayPage(),
-    //CityDaysPage(),
+    CityDaysPage(),
   ];
 
   @override
@@ -34,12 +35,11 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           buttonBackgroundColor: Colors.purple.shade100,
           color: Colors.purple,
-          index: 0,
           height: 60,
           animationCurve: Curves.easeInOut,
           animationDuration: Duration(milliseconds: 300),
           items: items,
-          onTap: (value) => setState(() => this.index = index),
+          onTap: (index) => setState(() => this.index = index),
         ),
       ),
     );
