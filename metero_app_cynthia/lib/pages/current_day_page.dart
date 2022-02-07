@@ -15,6 +15,7 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
   var api_key = "0c32b9ef04a238b65e65f8b87141369c";
   late Future<Weather> weather;
   final formKey = GlobalKey<FormState>();
+
   Future<Weather> getWeather() async {
     final response = await http.get(Uri.parse(
         'https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}'));
