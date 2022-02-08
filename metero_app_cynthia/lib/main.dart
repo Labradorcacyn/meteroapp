@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:metero_app_cynthia/pages/city_days_page.dart';
 import 'package:metero_app_cynthia/pages/current_day_page.dart';
 import 'package:metero_app_cynthia/pages/home_page.dart';
+import 'package:metero_app_cynthia/pages/utils/preferences.dart';
 
 void main() {
-  //PreferenceUtils.init();
+  PreferenceUtils.init();
   runApp(const MyApp());
 }
 
