@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:metero_app_cynthia/pages/utils/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -19,6 +21,7 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
+  LatLng _tap = LatLng(LAT, LON);
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -33,12 +36,20 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       body: GoogleMap(
         mapType: MapType.hybrid,
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
+        },
+        onTap: (LatLng latlng) async {
+          setState(() async {
+            SharedPreferences preferences =
+                await SharedPreferences.getInstance();
+            preferences.setDouble('LAT', latlng.latitude);
+            preferences.setDouble('LON', latlng.longitude);
+          });
         },
       ),
       floatingActionButton: FloatingActionButton.extended(

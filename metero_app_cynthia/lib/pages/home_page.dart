@@ -17,8 +17,8 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
 
   final screens = [
-    CurrentDayPage(),
     CityDaysPage(),
+    CurrentDayPage(),
     GoogleMap(
         initialCameraPosition: CameraPosition(
       target: LatLng(LAT, LON),
@@ -29,8 +29,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final items = <Widget>[
-      Icon(FontAwesomeIcons.thermometerEmpty, size: 20),
       Icon(FontAwesomeIcons.calendarDay, size: 20),
+      Icon(FontAwesomeIcons.thermometerEmpty, size: 20),
       Icon(FontAwesomeIcons.map, size: 20)
     ];
 
@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
           animationCurve: Curves.easeInOut,
           animationDuration: Duration(milliseconds: 300),
           items: items,
+          index: 1,
           onTap: (index) => setState(() => this.index = index),
         ),
       ),

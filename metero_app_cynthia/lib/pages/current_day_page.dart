@@ -13,11 +13,11 @@ class CurrentDayPage extends StatefulWidget {
 
 class _CurrentDayPageState extends State<CurrentDayPage> {
   var api_key = "0c32b9ef04a238b65e65f8b87141369c";
-  late Future<WeatherResponse> weather;
+  late Future<WeatherResponse> weath;
 
   Future<WeatherResponse> getWeather() async {
     final response = await http.get(Uri.parse(
-        'http://api.openweathermap.org/data/2.5/weather?lat=${LAT.toString()}&lon=${LON.toString()}&appid=${api_key}'));
+        'http://api.openweathermap.org/data/2.5/weather?lat=${LAT.toString()}&lon=${LON.toString()}&units=metric&appid=${api_key}'));
     if (response.statusCode == 200) {
       return WeatherResponse.fromJson(jsonDecode(response.body));
     } else {
@@ -27,7 +27,7 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
 
   @override
   void initState() {
-    weather = getWeather();
+    weath = getWeather();
     super.initState();
   }
 
@@ -35,7 +35,7 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder<WeatherResponse>(
-      future: weather,
+      future: weath,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           //print(snapshot.data!.main);
@@ -56,7 +56,7 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
                       child: Text(
-                        'TIEMPO',
+                        'TIEMPO EN ' + snapshot.data!.name.toUpperCase(),
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14.0,
@@ -73,7 +73,9 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "Rain",
+                        "Sensación Térmica de " +
+                            (snapshot.data!.main.feelsLike).toString() +
+                            " \u00B0",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14.0,
@@ -91,19 +93,57 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
                       ListTile(
                           leading: FaIcon(FontAwesomeIcons.thermometerHalf),
                           title: Text("Temperatura"),
-                          trailing: Text("52\u00B0")),
+                          trailing: Text((snapshot.data!.main.temp).toString() +
+                              " \u00B0")),
                       ListTile(
                           leading: FaIcon(FontAwesomeIcons.cloud),
                           title: Text("Tiempo"),
-                          trailing: Text("Tiempo")),
+                          trailing: Text(snapshot.data!.weather[0].main)),
                       ListTile(
                           leading: FaIcon(FontAwesomeIcons.sun),
                           title: Text("Humedad"),
-                          trailing: Text("12")),
+                          trailing: Text(
+                              (snapshot.data!.main.humidity).toString() +
+                                  " %")),
                       ListTile(
                           leading: FaIcon(FontAwesomeIcons.wind),
+                          /*PROBANDO LA ROTACION DE LA FLECHA DEL VIENTO CON TRANSFORM
+                            Transform(
+                            if (snapshot.data!.wind.deg >= 90 && snapshot.data!.wind.deg < 180) {
+                              transform: Matrix4.rotationZ(2),
+                            }
+                            if(snapshot.data!.wind.deg >= 180 && snapshot.data!.wind.deg < 200){
+                              transform: Matrix4.rotationZ(5),
+                            } 
+                            if(snapshot.data!.wind.deg >200){
+                              transform: Matrix4.rotationZ(8),)
+                            }*/
                           title: Text("Velocidad del Viento"),
-                          trailing: Text("12"))
+                          trailing: Text(
+                              snapshot.data!.wind.speed.toString() + " km/h")),
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.temperatureHigh,
+                              color: Colors.black38,
+                            ),
+                            Text(
+                              "Máximas: " +
+                                  snapshot.data!.main.tempMax.toString() +
+                                  " \u00B0    ",
+                            ),
+                            Icon(
+                              FontAwesomeIcons.temperatureLow,
+                              color: Colors.black45,
+                            ),
+                            Text("Mínimas: " +
+                                snapshot.data!.main.tempMin.toString() +
+                                " \u00B0")
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
