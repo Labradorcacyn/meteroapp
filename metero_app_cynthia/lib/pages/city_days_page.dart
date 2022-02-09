@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,6 +9,7 @@ import 'dart:convert';
 import 'package:metero_app_cynthia/models/one_call.dart';
 import 'package:metero_app_cynthia/pages/utils/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class CityDaysPage extends StatefulWidget {
   @override
@@ -14,13 +17,12 @@ class CityDaysPage extends StatefulWidget {
 }
 
 class _CityDaysPageState extends State<CityDaysPage> {
-  final times = ['1', '2', '3', '4', '5', '2', '3', '4', '5'];
   var api_key = "0c32b9ef04a238b65e65f8b87141369c";
   late Future<OneCallResponse> oneCall;
 
   Future<OneCallResponse> getOneCall() async {
     final response = await http.get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/onecall?lat=${LAT_PREF}&lon=${LON_PREF}&units=metric&exclude=current,minutely,alerts&appid=${api_key}'));
+        'https://api.openweathermap.org/data/2.5/onecall?lat=37.3826&lon=-5.99629&units=metric&exclude=current,minutely,alerts&appid=${api_key}'));
     if (response.statusCode == 200) {
       return OneCallResponse.fromJson(jsonDecode(response.body));
     } else {
@@ -98,7 +100,8 @@ class _CityDaysPageState extends State<CityDaysPage> {
                                 TextStyle(color: Colors.white, fontSize: 15))),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("06.02.2022",
+                      child: Text(
+                          DateFormat('dd-MM-yyyy').format(DateTime.now()),
                           style: TextStyle(color: Colors.white, fontSize: 15)),
                     )
                   ],
@@ -112,12 +115,25 @@ class _CityDaysPageState extends State<CityDaysPage> {
                   ),
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: times.length,
+                      itemCount: snapshot.data!.hourly.length,
                       itemBuilder: (context, index) {
                         return Container(
                           width: 60,
                           child: Card(
-                            child: Center(child: Text('${times[index]}')),
+                            child: Center(
+                                child: Column(
+                              children: <Widget>[
+                                Text(DateFormat('HH:mm')
+                                    .format(DateTime(
+                                        snapshot.data!.hourly[index].dt))
+                                    .toString()),
+                                Image.network(
+                                    'http://openweathermap.org/img/wn/${snapshot.data!.hourly[index].weather[0].icon}.png'),
+                                Text(snapshot.data!.hourly[index].temp
+                                        .toString() +
+                                    " \u00b0")
+                              ],
+                            )),
                           ),
                         );
                       }),
@@ -131,13 +147,24 @@ class _CityDaysPageState extends State<CityDaysPage> {
                   ),
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
-                      itemCount: times.length,
+                      itemCount: snapshot.data!.daily.length,
                       itemBuilder: (context, index) {
                         return Expanded(
                           child: Container(
                             height: 60,
                             child: Card(
-                              child: Center(child: Text('${times[index]}')),
+                              child: Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(((snapshot.data!.daily[index].dt))
+                                          .toString()),
+                                      Text(snapshot
+                                          .data!.daily[index].weather[0].main),
+                                      Image.network(
+                                          'http://openweathermap.org/img/wn/${snapshot.data!.daily[index].weather[0].icon}.png'),
+                                    ],
+                                  )),
                             ),
                           ),
                         );

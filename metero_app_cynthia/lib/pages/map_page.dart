@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:metero_app_cynthia/pages/utils/const.dart';
+import 'package:metero_app_cynthia/pages/utils/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPage extends StatefulWidget {
@@ -12,7 +13,6 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> {
   Completer<GoogleMapController> _controller = Completer();
   late LatLng _tap;
-  late SharedPreferences preferences;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -37,16 +37,24 @@ class MapPageState extends State<MapPage> {
         _controller.complete(controller);
       },
       onTap: (LatLng latlng) {
-        //print(latlng.latitude);
+        print("HOLA TONTO");
+        print(latlng.latitude);
+        print(latlng.longitude);
         setState(() {
-          preferences.setDouble(LAT_PREF, latlng.latitude);
-          preferences.setDouble(LON_PREF, latlng.longitude);
+          _tap = latlng;
         });
+        PreferenceUtils.setDouble(LAT_PREF, latlng.latitude);
+        PreferenceUtils.setDouble(LON_PREF, latlng.longitude);
       },
+      // markers: <Marker>{_createMarker()},
     ));
   }
 
-  Future<void> initPreferences() async {
-    preferences = await SharedPreferences.getInstance();
-  }
+  /*Marker _createMarker() {
+    return Marker(
+      markerId: MarkerId("marker_1"),
+      position: LatLng(PreferenceUtils.getDouble(LAT_PREF)!,
+          PreferenceUtils.getDouble(LON_PREF)!),
+    );
+  }*/
 }

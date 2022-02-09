@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:metero_app_cynthia/models/weather.dart';
 import 'package:metero_app_cynthia/pages/utils/const.dart';
+import 'package:metero_app_cynthia/pages/utils/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrentDayPage extends StatefulWidget {
@@ -22,8 +23,11 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
   }
 
   Future<WeatherResponse> getWeather() async {
+    var lat = PreferenceUtils.getDouble(LAT_PREF);
+    var lon = PreferenceUtils.getDouble(LON_PREF);
+
     final response = await http.get(Uri.parse(
-        'http://api.openweathermap.org/data/2.5/weather?lat=${preferences.getDouble(LAT_PREF)}&lon=${preferences.getDouble(LON_PREF)}&units=metric&appid=${api_key}'));
+        'http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${api_key}'));
     if (response.statusCode == 200) {
       return WeatherResponse.fromJson(jsonDecode(response.body));
     } else {
