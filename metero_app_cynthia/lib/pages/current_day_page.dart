@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:metero_app_cynthia/models/weather.dart';
 import 'package:metero_app_cynthia/pages/utils/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrentDayPage extends StatefulWidget {
   @override
@@ -14,10 +15,15 @@ class CurrentDayPage extends StatefulWidget {
 class _CurrentDayPageState extends State<CurrentDayPage> {
   var api_key = "0c32b9ef04a238b65e65f8b87141369c";
   late Future<WeatherResponse> weath;
+  late SharedPreferences preferences;
+
+  Future<void> initPreferences() async {
+    preferences = await SharedPreferences.getInstance();
+  }
 
   Future<WeatherResponse> getWeather() async {
     final response = await http.get(Uri.parse(
-        'http://api.openweathermap.org/data/2.5/weather?lat=${LAT.toString()}&lon=${LON.toString()}&units=metric&appid=${api_key}'));
+        'http://api.openweathermap.org/data/2.5/weather?lat=${preferences.getDouble(LAT_PREF)}&lon=${preferences.getDouble(LON_PREF)}&units=metric&appid=${api_key}'));
     if (response.statusCode == 200) {
       return WeatherResponse.fromJson(jsonDecode(response.body));
     } else {

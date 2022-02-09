@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:metero_app_cynthia/models/one_call.dart';
 import 'package:metero_app_cynthia/pages/utils/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CityDaysPage extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _CityDaysPageState extends State<CityDaysPage> {
 
   Future<OneCallResponse> getOneCall() async {
     final response = await http.get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/onecall?lat=${LAT.toString()}&lon=${LON.toString()}&units=metric&exclude=current,minutely,alerts&appid=0${api_key}'));
+        'https://api.openweathermap.org/data/2.5/onecall?lat=${LAT_PREF}&lon=${LON_PREF}&units=metric&exclude=current,minutely,alerts&appid=${api_key}'));
     if (response.statusCode == 200) {
       return OneCallResponse.fromJson(jsonDecode(response.body));
     } else {

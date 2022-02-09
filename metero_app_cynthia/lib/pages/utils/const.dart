@@ -1,5 +1,5 @@
 //ESTILO
 
-//VARIABLES
-const double LON = -5.99629;
-const double LAT = 37.3826;
+//PREFERENCES
+const LON_PREF = 'LON_PREF';
+const LAT_PREF = 'LAT_PREF';

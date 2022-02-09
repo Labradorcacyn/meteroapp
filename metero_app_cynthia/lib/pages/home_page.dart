@@ -6,6 +6,8 @@ import 'package:metero_app_cynthia/pages/city_days_page.dart';
 import 'package:metero_app_cynthia/pages/current_day_page.dart';
 import 'package:metero_app_cynthia/pages/utils/const.dart';
 
+import 'map_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -16,15 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int index = 0;
 
-  final screens = [
-    CityDaysPage(),
-    CurrentDayPage(),
-    GoogleMap(
-        initialCameraPosition: CameraPosition(
-      target: LatLng(LAT, LON),
-      zoom: 14.4746,
-    ))
-  ];
+  final screens = [CityDaysPage(), CurrentDayPage(), MapPage()];
 
   @override
   Widget build(BuildContext context) {
