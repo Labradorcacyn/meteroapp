@@ -25,6 +25,7 @@ class _CurrentDayPageState extends State<CurrentDayPage> {
   Future<WeatherResponse> getWeather() async {
     var lat = PreferenceUtils.getDouble(LAT_PREF);
     var lon = PreferenceUtils.getDouble(LON_PREF);
+    print('CURRENT ${PreferenceUtils.getDouble(LAT_PREF)}');
 
     final response = await http.get(Uri.parse(
         'http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${api_key}'));

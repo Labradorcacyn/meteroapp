@@ -6,25 +6,35 @@ import 'package:metero_app_cynthia/pages/utils/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPage extends StatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
+
   @override
-  State<MapPage> createState() => MapPageState();
+  State<MapPage> createState() => _MapPageState();
 }
 
-class MapPageState extends State<MapPage> {
+class _MapPageState extends State<MapPage> {
   Completer<GoogleMapController> _controller = Completer();
   late LatLng _tap;
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  late CameraPosition _kGooglePlex;
 
   @override
   void initState() {
     super.initState();
-    /*initPreferences().then((value) => {
-          if (true) {} else {_tap = LatLng(LAT, LON)}
-        });*/
+    print('MAP ${PreferenceUtils.getDouble(LAT_PREF)}');
+    if (PreferenceUtils.getDouble(LAT_PREF) != null ||
+        PreferenceUtils.getDouble(LON_PREF) != null) {
+      _kGooglePlex = CameraPosition(
+        target: LatLng(PreferenceUtils.getDouble(LAT_PREF)!,
+            PreferenceUtils.getDouble(LON_PREF)!),
+        zoom: 14.4746,
+      );
+    } else {
+      _kGooglePlex = CameraPosition(
+        target: LatLng(37.3826, -5.99629),
+        zoom: 14.4746,
+      );
+    }
   }
 
   @override
@@ -37,9 +47,6 @@ class MapPageState extends State<MapPage> {
         _controller.complete(controller);
       },
       onTap: (LatLng latlng) {
-        print("HOLA TONTO");
-        print(latlng.latitude);
-        print(latlng.longitude);
         setState(() {
           _tap = latlng;
         });

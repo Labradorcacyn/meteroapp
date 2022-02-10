@@ -8,6 +8,7 @@ import 'dart:convert';
 
 import 'package:metero_app_cynthia/models/one_call.dart';
 import 'package:metero_app_cynthia/pages/utils/const.dart';
+import 'package:metero_app_cynthia/pages/utils/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -21,8 +22,10 @@ class _CityDaysPageState extends State<CityDaysPage> {
   late Future<OneCallResponse> oneCall;
 
   Future<OneCallResponse> getOneCall() async {
+    var lat = PreferenceUtils.getDouble(LAT_PREF);
+    var lon = PreferenceUtils.getDouble(LON_PREF);
     final response = await http.get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/onecall?lat=37.3826&lon=-5.99629&units=metric&exclude=current,minutely,alerts&appid=${api_key}'));
+        'https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=current,minutely,alerts&appid=${api_key}'));
     if (response.statusCode == 200) {
       return OneCallResponse.fromJson(jsonDecode(response.body));
     } else {
@@ -86,7 +89,7 @@ class _CityDaysPageState extends State<CityDaysPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Sevilla",
+                      child: Text(snapshot.data!.timezone.toString(),
                           style: TextStyle(color: Colors.white, fontSize: 20)),
                     )
                   ],
@@ -124,8 +127,8 @@ class _CityDaysPageState extends State<CityDaysPage> {
                                 child: Column(
                               children: <Widget>[
                                 Text(DateFormat('HH:mm')
-                                    .format(DateTime(
-                                        snapshot.data!.hourly[index].dt))
+                                    .format(DateTime.fromMillisecondsSinceEpoch(
+                                        snapshot.data!.hourly[index].dt * 1000))
                                     .toString()),
                                 Image.network(
                                     'http://openweathermap.org/img/wn/${snapshot.data!.hourly[index].weather[0].icon}.png'),
@@ -156,11 +159,38 @@ class _CityDaysPageState extends State<CityDaysPage> {
                               child: Padding(
                                   padding: const EdgeInsets.only(left: 20),
                                   child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Text(((snapshot.data!.daily[index].dt))
+                                      Text(((DateFormat('dd EEE.')
+                                              .format(DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      snapshot.data!
+                                                              .daily[index].dt *
+                                                          1000))
+                                              .toString()))
                                           .toString()),
-                                      Text(snapshot
-                                          .data!.daily[index].weather[0].main),
+                                      Icon(
+                                        FontAwesomeIcons.wind,
+                                        size: 15,
+                                      ),
+                                      Text(snapshot.data!.daily[index].windSpeed
+                                              .toString() +
+                                          " km/h"),
+                                      Icon(
+                                        FontAwesomeIcons.longArrowAltUp,
+                                        size: 10,
+                                      ),
+                                      Text(snapshot.data!.daily[index].temp.max
+                                              .toString() +
+                                          " \u00b0"),
+                                      Icon(
+                                        FontAwesomeIcons.longArrowAltDown,
+                                        size: 10,
+                                      ),
+                                      Text(snapshot.data!.daily[index].temp.min
+                                              .toString() +
+                                          " \u00b0"),
                                       Image.network(
                                           'http://openweathermap.org/img/wn/${snapshot.data!.daily[index].weather[0].icon}.png'),
                                     ],

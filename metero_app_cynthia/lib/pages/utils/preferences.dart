@@ -4,9 +4,8 @@ class PreferenceUtils {
   static late SharedPreferences _prefs;
 
   // call this method from iniState() function of mainApp().
-  static Future<SharedPreferences> init() async {
+  static init() async {
     _prefs = await SharedPreferences.getInstance();
-    return _prefs;
   }
 
   //sets

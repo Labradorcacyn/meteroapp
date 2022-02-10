@@ -6,7 +6,6 @@ import 'package:metero_app_cynthia/pages/map_page.dart';
 import 'package:metero_app_cynthia/pages/utils/preferences.dart';
 
 void main() {
-  PreferenceUtils.init();
   runApp(const MyApp());
 }
 
@@ -15,6 +14,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferenceUtils.init();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'MeteroApp',
@@ -24,8 +25,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/home': (context) => HomePage(),
         '/current_day': (context) => CurrentDayPage(),
-        '/one_call': (context) => CityDaysPage(),
-        '/map': (context) => MapPage(),
+        '/one_call': (context) => CityDaysPage()
       },
     );
   }

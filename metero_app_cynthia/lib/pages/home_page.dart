@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int index = 0;
+  int index = 1;
 
   final screens = [CityDaysPage(), CurrentDayPage(), MapPage()];
 
