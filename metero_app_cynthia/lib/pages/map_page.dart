@@ -22,16 +22,19 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     print('MAP ${PreferenceUtils.getDouble(LAT_PREF)}');
+
+    if (PreferenceUtils.getDouble(LAT_PREF) == null ||
+        PreferenceUtils.getDouble(LON_PREF) == null) {
+      _kGooglePlex = CameraPosition(
+        target: LatLng(37.3826, -5.99629),
+        zoom: 14.4746,
+      );
+    }
     if (PreferenceUtils.getDouble(LAT_PREF) != null ||
         PreferenceUtils.getDouble(LON_PREF) != null) {
       _kGooglePlex = CameraPosition(
         target: LatLng(PreferenceUtils.getDouble(LAT_PREF)!,
             PreferenceUtils.getDouble(LON_PREF)!),
-        zoom: 14.4746,
-      );
-    } else {
-      _kGooglePlex = CameraPosition(
-        target: LatLng(37.3826, -5.99629),
         zoom: 14.4746,
       );
     }
@@ -53,15 +56,15 @@ class _MapPageState extends State<MapPage> {
         PreferenceUtils.setDouble(LAT_PREF, latlng.latitude);
         PreferenceUtils.setDouble(LON_PREF, latlng.longitude);
       },
-      // markers: <Marker>{_createMarker()},
+      markers: <Marker>{_createMarker()},
     ));
   }
 
-  /*Marker _createMarker() {
+  Marker _createMarker() {
     return Marker(
       markerId: MarkerId("marker_1"),
       position: LatLng(PreferenceUtils.getDouble(LAT_PREF)!,
           PreferenceUtils.getDouble(LON_PREF)!),
     );
-  }*/
+  }
 }
